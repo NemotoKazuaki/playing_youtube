@@ -28,7 +28,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Color(0xFFFF0000),
+    statusBarColor: Colors.white,
   ));
   runApp(MyApp());
 }
@@ -41,9 +41,9 @@ class MyApp extends StatelessWidget {
       title: 'Youtube再生アプリ',
       theme: ThemeData(
         primarySwatch: Colors.red,
-        appBarTheme: AppBarTheme(color: Color(0xFFFF0000)),
+        appBarTheme: AppBarTheme(color: Colors.red),
         iconTheme: IconThemeData(
-          color: Colors.red,
+          color: Colors.black,
         ),
       ),
       home: MyHomePage(title: 'Youtube再生アプリ'),
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 disableDragSeek: false,
                 loop: true,
               ),
-              progressIndicatorColor: Color(0xFFFF0000),
+              progressIndicatorColor: Colors.black,
               topActions: <Widget>[
                 IconButton(
                   icon: Icon(
