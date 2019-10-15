@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Youtube Player Demo',
+      title: 'Youtube再生アプリ',
       theme: ThemeData(
         primarySwatch: Colors.red,
         appBarTheme: AppBarTheme(color: Color(0xFFFF0000)),
@@ -36,20 +36,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //再生や停止等のコントロールを行うクラスのインスタンス化
   YoutubePlayerController _controller = YoutubePlayerController();
+
   var _idController = TextEditingController();
   var _seekToController = TextEditingController();
   double _volume = 100;
-  bool _muted = false;
+  bool _muted = true;
   String _playerStatus = "";
 
+  //起動したときに再生されるYouTubeID
   String _videoId = "LIlZCmETvsY";
 
   void listener() {
+    //動画再生が終了したら、処理する
     if (_controller.value.playerState == PlayerState.ended) {
       _showThankYouDialog();
     }
+
     if (mounted) {
+      //一番下の文字列で、再生中か停止中かを表示
       setState(() {
         _playerStatus = _controller.value.playerState.toString();
       });
@@ -79,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               context: context,
               videoId: _videoId,
               flags: YoutubePlayerFlags(
-                mute: false,
+                mute: true,
                 autoPlay: false,
                 forceHideAnnotation: true,
                 showVideoProgressIndicator: true,
@@ -140,11 +146,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     height: 10.0,
                   ),
+                  //InkWell ➡　Widgetにタッチインターフェースを使う場合に使用
                   InkWell(
+                    //タップしたら処理
                     onTap: () {
                       setState(() {
                         _videoId = _idController.text;
-                        // If text is link then converting to corresponding id.
+
+                        // URLの場合、対応するIDに変換する
                         if (_videoId.contains("http"))
                           _videoId = YoutubePlayer.convertUrlToId(_videoId);
                       });
@@ -223,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     children: <Widget>[
                       Text(
-                        "Volume",
+                        "音量",
                         style: TextStyle(fontWeight: FontWeight.w300),
                       ),
                       Expanded(
@@ -268,8 +277,8 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Video Ended"),
-          content: Text("Thank you for trying the plugin!"),
+          title: Text("動画再生終了"),
+          content: Text("使ってくれてありがとう！"),
         );
       },
     );
