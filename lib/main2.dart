@@ -159,21 +159,18 @@ class _MyHomePageState extends State<MyHomePage>{
                             _videoId = YoutubePlayer.convertUrlToId(_videoId);
                           }
                         });
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
-                          color: Colors.green,
-                          child: Text(
-                            "検索",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
                       }, //onTap
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 16,
+                        ),
+                        color: Colors.green,
+                        child: Text(
+                          "検索",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: 10,
@@ -252,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage>{
         builder: (BuildContext context){
           return AlertDialog(
             title: Text("再生終了"),
-            content: Text("次も見てね！"),
+            content: Text("次もよろしくね！"),
           );
         },
       );
