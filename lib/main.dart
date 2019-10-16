@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(
                     Icons.arrow_back_ios,
                     color: Colors.white,
-                    size: 20.0,
+                    size: 20,
                   ),
                   onPressed: () {
                     _controller.exitFullScreen();
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     'アイウエオ',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18.0,
+                      fontSize: 18,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -178,24 +178,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         _videoId = _idController.text;
 
                         // URLの場合、対応するIDに変換する
-                        if (_videoId.contains("http"))
+                        if (_videoId.contains("http")) {
                           _videoId = YoutubePlayer.convertUrlToId(_videoId);
+                        }
                       });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                      ),
-                      color: Color(0xFFFF0000),
-                      child: Text(
-                        "読み込み",
-                        style: TextStyle(fontSize: 18.0, color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                      child:
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 16,
+                        ),
+                        color: Color(0xFFFF0000),
+                        child: Text(
+                          "読み込み",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }, //onTap
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

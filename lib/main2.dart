@@ -24,7 +24,6 @@ SOFTWARE.
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:playing_youtube/main.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 void main(){
@@ -88,7 +87,55 @@ class _MyHomePageState extends State<MyHomePage>{
           ),
       ),
         body: SingleChildScrollView(
-
+          child: Column(
+            children: <Widget>[
+              YoutubePlayer(
+                context: context,
+                videoId: _videoId,
+                flags: YoutubePlayerFlags(
+                  mute: true,
+                  autoPlay: false,
+                  forceHideAnnotation: true,
+                  showVideoProgressIndicator: true,
+                  disableDragSeek: false,
+                  loop: false,
+                ),
+                progressIndicatorColor: Colors.black,
+                topActions: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    onPressed: (){
+                      _controller.exitFullScreen();
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Kazuaki_Nemoto",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    onPressed: (){},
+                  ),
+                ],
+                onPlayerInitialized: (controller){_controller = controller;},
+              ),
+            ],
+          ),
         ),
     );
 }
