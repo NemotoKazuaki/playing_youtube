@@ -27,6 +27,9 @@ import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 void main(){
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.white,
+  ));
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -64,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage>{
   var _idController = TextEditingController();
 
   //再生されるID
-  String _videoId = "";
+  String _videoId = "zhCtzmDWsN0";
 
   bool _muted = true;
   double _volume = 100;
@@ -93,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage>{
                 context: context,
                 videoId: _videoId,
                 flags: YoutubePlayerFlags(
-                  mute: true,
+                  mute: false,
                   autoPlay: false,
                   forceHideAnnotation: true,
                   showVideoProgressIndicator: true,
@@ -112,17 +115,6 @@ class _MyHomePageState extends State<MyHomePage>{
                       _controller.exitFullScreen();
                     },
                   ),
-                  /*Expanded(
-                    child: Text(
-                      "Kazuaki_Nemoto",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),*/
                   IconButton(
                     icon: Icon(
                       Icons.settings,
@@ -132,11 +124,138 @@ class _MyHomePageState extends State<MyHomePage>{
                     onPressed: (){},
                   ),
                 ],
-                onPlayerInitialized: (controller){_controller = controller;},
+                onPlayerInitialized: (controller){
+                  _controller = controller;
+                  _controller.addListener(listener);
+                }, // onPlayerInitialized
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _idController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "YoutubeのリンクかURLを入力してください"
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    //Wedgetにタッチインタフェースを使う時に使う
+                    InkWell(
+                      //タップしたら処理
+                      onTap: (){
+                        setState(() {
+                          _videoId = _idController.text;
+
+                          //URLの場合は、対応するIDに変換する
+                          if(_videoId.contains("http")){
+                            _videoId = YoutubePlayer.convertUrlToId(_videoId);
+                          }
+                        });
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                          color: Colors.green,
+                          child: Text(
+                            "検索",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }, //onTap
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(
+                            _controller.value.isPlaying
+                                ? Icons.play_arrow
+                                : Icons.pause,
+                          ),
+                          onPressed: () {
+                            _controller.value.isPlaying
+                                ? _controller.pause()
+                                : _controller.play();
+                            setState(() {});
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
+                          onPressed: () {
+                            _muted ? _controller.unMute() : _controller.mute();
+                            setState(() {
+                              _muted = !_muted;
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.fullscreen),
+                          onPressed: () => _controller.enterFullScreen(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "音量",
+                          style: TextStyle(fontWeight: FontWeight.w300),
+                        ),
+                        Expanded(
+                          child: Slider(
+                            inactiveColor: Colors.transparent,
+                            value: _volume,
+                            min: 0,
+                            max: 100,
+                            divisions: 10,
+                            label: '${(_volume).round()}',
+                            onChanged: (value) {
+                              setState(() {
+                                _volume = value;
+                              });
+                              _controller.setVolume(_volume.round());
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
     );
   } // <Widget>[]
+
+  void listener(){
+    if(_controller.value.playerState == PlayerState.ended){
+      showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("再生終了"),
+            content: Text("次も見てね！"),
+          );
+        },
+      );
+    }
+  }
 }

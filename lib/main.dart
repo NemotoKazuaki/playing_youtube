@@ -128,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     _controller.exitFullScreen();
                   },
                 ),
+
+                //動画画面をタップした時に表示されるやつ
                 Expanded(
                   child: Text(
                     'アイウエオ',
@@ -143,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(
                     Icons.settings,
                     color: Colors.white,
-                    size: 25.0,
+                    size: 25,
                   ),
                   onPressed: () {},
                 ),
@@ -154,10 +156,10 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             SizedBox(
-              height: 10.0,
+              height: 10,
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -168,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         hintText: "YoutubeのリンクかIDを入力してください"),
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
                   //InkWell ➡　Widgetにタッチインターフェースを使う場合に使用
                   InkWell(
@@ -182,7 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           _videoId = YoutubePlayer.convertUrlToId(_videoId);
                         }
                       });
-                      child:
                       Container(
                         padding: EdgeInsets.symmetric(
                           vertical: 16,
@@ -231,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
                   TextField(
                     controller: _seekToController,
@@ -240,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       border: OutlineInputBorder(),
                       hintText: "Seek to seconds",
                       suffixIcon: Padding(
-                        padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(5),
                         child: OutlineButton(
                           child: Text("Seek"),
                           onPressed: () => _controller.seekTo(
@@ -253,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
                   Row(
                     children: <Widget>[
@@ -265,8 +266,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Slider(
                           inactiveColor: Colors.transparent,
                           value: _volume,
-                          min: 0.0,
-                          max: 100.0,
+                          min: 0,
+                          max: 100,
                           divisions: 10,
                           label: '${(_volume).round()}',
                           onChanged: (value) {
@@ -280,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8),
                     child: Text(
                       "Status: $_playerStatus",
                       style: TextStyle(
