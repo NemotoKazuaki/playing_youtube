@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       title: 'Youtube再生アプリ',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        appBarTheme: AppBarTheme(color: Colors.red),
+        appBarTheme: AppBarTheme(color: Colors.green),
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage>{
                       _controller.exitFullScreen();
                     },
                   ),
-                  Expanded(
+                  /*Expanded(
                     child: Text(
                       "Kazuaki_Nemoto",
                       style: TextStyle(
@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage>{
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                  ),
+                  ),*/
                   IconButton(
                     icon: Icon(
                       Icons.settings,
