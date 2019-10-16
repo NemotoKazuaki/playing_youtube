@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage>{
   double _volume = 100;
 
 
-  // このアプリが非アクティブになっている間は、動画再生を停止する
+  // アプリが非アクティブになっている間は、動画再生を停止する
   @override
   void deactivate() {
     _controller.pause();
@@ -84,9 +84,11 @@ class _MyHomePageState extends State<MyHomePage>{
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: TextStyle(color: Colors.white),
-        )
+          style: TextStyle(color: Colors.white)
+          ),
       ),
-    )
-  }
+        body: SingleChildScrollView(
+
+        ),
+    );
 }
