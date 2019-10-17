@@ -26,15 +26,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-/*
-アプリアイコンの設定が未設定
-./assets/images内にicon.pngで保存する
- */
-
 void main(){
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.black,
-    systemNavigationBarColor: Colors.black,
+    statusBarColor: Colors.white,
   ));
   runApp(MyApp());
 }
@@ -42,20 +36,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       title: 'Youtube再生アプリ',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        appBarTheme: AppBarTheme(
-            color: Colors.green
-        ),
+        appBarTheme: AppBarTheme(color: Colors.green),
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
       ),
-      home: MyHomePage(
-          title: 'Youtube再生アプリ'
-      ),
+      home: MyHomePage(title: 'Youtube再生アプリ'),
     );
   }
 }
@@ -96,10 +86,8 @@ class _MyHomePageState extends State<MyHomePage>{
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: TextStyle(
-              color: Colors.white
+          style: TextStyle(color: Colors.white)
           ),
-        ),
       ),
         body: SingleChildScrollView(
           child: Column(
@@ -136,44 +124,28 @@ class _MyHomePageState extends State<MyHomePage>{
                     onPressed: (){},
                   ),
                 ],
-
-                /*
                 onPlayerInitialized: (controller){
                   _controller = controller;
                   _controller.addListener(listener);
                 }, // onPlayerInitialized
-                 */
               ),
-
-              //YoutubeのリンクかIDを入力する場所
               SizedBox(
                 height: 10,
               ),
               Padding(
-                padding: EdgeInsets.all(18),
+                padding: EdgeInsets.all(8),
                 child: Column(
-                /*
-                Column（縦が主軸）は子レイアウトを横方向に並べ、
-                Row（横が主軸）は縦方向に子を並べるため、
-    　           MainAxisAlignment　→　主軸に沿って配置する方法
-                 参考
-                 https://qiita.com/ikemura23/items/67af19b6cbf16fb0251a
-                 */
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     TextFormField(
                       controller: _idController,
-                      textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: "YoutubeのリンクかURLを入力してください",
-                        hintStyle: TextStyle(
-                          fontSize: 15,
-                        ),
+                        hintText: "YoutubeのリンクかURLを入力してください"
                       ),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     //Wedgetにタッチインタフェースを使う時に使う
                     InkWell(
@@ -195,16 +167,11 @@ class _MyHomePageState extends State<MyHomePage>{
                         color: Colors.green,
                         child: Text(
                           "検索",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white
-                          ),
                         ),
                       ),
                     ),
-
-                    //再生 ミュート　フルスクリーン　アイコンのWedget
                     SizedBox(
                       height: 10,
                     ),
@@ -212,46 +179,33 @@ class _MyHomePageState extends State<MyHomePage>{
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         IconButton(
-                          //再生　停止 アイコン
                           icon: Icon(
                             _controller.value.isPlaying
-                                ? Icons.play_arrow : Icons.pause,
+                                ? Icons.play_arrow
+                                : Icons.pause,
                           ),
                           onPressed: () {
                             _controller.value.isPlaying
-                                ? _controller.pause() : _controller.play();
+                                ? _controller.pause()
+                                : _controller.play();
                             setState(() {});
                           },
                         ),
-
                         IconButton(
-                          //ミュート　アイコン
-                          icon: Icon(
-                              _muted
-                                ? Icons.volume_off :Icons.volume_up
-                          ),
+                          icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
                           onPressed: () {
-                            _muted
-                              ? _controller.unMute() : _controller.mute();
+                            _muted ? _controller.unMute() : _controller.mute();
                             setState(() {
                               _muted = !_muted;
                             });
                           },
                         ),
-
                         IconButton(
-                          //フルスクリーン　アイコン
-                          icon: Icon(
-                              Icons.fullscreen
-                          ),
-                          onPressed: () {
-                            _controller.enterFullScreen();
-                          } ,
+                          icon: Icon(Icons.fullscreen),
+                          onPressed: () => _controller.enterFullScreen(),
                         ),
                       ],
                     ),
-
-                    //音量　Widget
                     SizedBox(
                       height: 10,
                     ),
@@ -259,15 +213,8 @@ class _MyHomePageState extends State<MyHomePage>{
                       children: <Widget>[
                         Text(
                           "音量",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w300),
                         ),
-                        /*
-                          Expanded → Widgetを固定の比率で配置する
-                          参考
-                          https://qiita.com/kalupas226/items/5aa41ca409730606000f
-                         */
                         Expanded(
                           child: Slider(
                             inactiveColor: Colors.transparent,
