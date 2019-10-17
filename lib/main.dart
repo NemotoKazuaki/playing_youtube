@@ -1,28 +1,51 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2019 Sarbagya Dhaubanjar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-void main() {
+void main(){
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Color(0xFFFF0000),
+    statusBarColor: Colors.white,
   ));
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,
-      title: 'Youtube Player Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Youtube再生アプリ',
       theme: ThemeData(
-        primarySwatch: Colors.red,
-        appBarTheme: AppBarTheme(color: Color(0xFFFF0000)),
+        primarySwatch: Colors.green,
+        appBarTheme: AppBarTheme(color: Colors.green),
         iconTheme: IconThemeData(
-          color: Colors.red,
+          color: Colors.black,
         ),
       ),
-      home: MyHomePage(title: 'Youtube Player Demo'),
+      home: MyHomePage(title: 'Youtube再生アプリ'),
     );
   }
 }
@@ -35,41 +58,35 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>{
+
+  //再生や停止等のコントロールを行うクラスのインスタンス化
   YoutubePlayerController _controller = YoutubePlayerController();
+
+  //入力されたYouTube動画のURLやIDをいじるためのクラスのインスタンス化
   var _idController = TextEditingController();
-  var _seekToController = TextEditingController();
-  double _volume = 100;
+
+  //再生されるID
+  String _videoId = "zhCtzmDWsN0";
+
   bool _muted = false;
-  String _playerStatus = "";
+  double _volume = 100;
 
-  String _videoId = "50kklGefAcs";
 
-  void listener() {
-    if (_controller.value.playerState == PlayerState.ended) {
-      _showThankYouDialog();
-    }
-    if (mounted) {
-      setState(() {
-        _playerStatus = _controller.value.playerState.toString();
-      });
-    }
-  }
-
+  // アプリが非アクティブになっている間は、動画再生を停止する
   @override
   void deactivate() {
-    // This pauses video while navigating to next page.
     _controller.pause();
     super.deactivate();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.title,
-          style: TextStyle(color: Colors.white),
+            widget.title,
+            style: TextStyle(color: Colors.white)
         ),
       ),
       body: SingleChildScrollView(
@@ -84,86 +101,98 @@ class _MyHomePageState extends State<MyHomePage> {
                 forceHideAnnotation: true,
                 showVideoProgressIndicator: true,
                 disableDragSeek: false,
-                loop: true,
+                loop: false,
               ),
-              progressIndicatorColor: Color(0xFFFF0000),
+              progressIndicatorColor: Colors.black,
               topActions: <Widget>[
                 IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
                     color: Colors.white,
-                    size: 20.0,
+                    size: 20,
                   ),
-                  onPressed: () {
+                  onPressed: (){
                     _controller.exitFullScreen();
                   },
-                ),
-                Expanded(
-                  child: Text(
-                    'Bhanchu Aaja || Ma Yesto Geet Gaunchu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
                 ),
                 IconButton(
                   icon: Icon(
                     Icons.settings,
                     color: Colors.white,
-                    size: 25.0,
+                    size: 25,
                   ),
-                  onPressed: () {},
+                  onPressed: (){},
                 ),
               ],
-              onPlayerInitialized: (controller) {
+              onPlayerInitialized: (controller){
                 _controller = controller;
                 _controller.addListener(listener);
-              },
+              }, // onPlayerInitialized
             ),
             SizedBox(
-              height: 10.0,
+              height: 10,
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   TextFormField(
                     controller: _idController,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter youtube \<video id\> or \<link\>"
+                      border: OutlineInputBorder(),
+                      hintText: "YoutubeのリンクかURLを入力してください",
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
+                  //Wedgetにタッチインタフェースを使う時に使う
                   InkWell(
-                    onTap: () {
+                    //タップしたら処理
+                    onTap: (){
                       setState(() {
-                        _videoId = _idController.text;
-                        // If text is link then converting to corresponding id.
-                        if (_videoId.contains("http"))
-                          _videoId = YoutubePlayer.convertUrlToId(_videoId);
+                        if(!(_idController.text == "")){
+                          _videoId = _idController.text;
+                          try{
+                            //URLの場合は、対応するIDに変換する
+                            if(_videoId.contains("http")){
+                              _videoId = YoutubePlayer.convertUrlToId(_videoId);
+                            }
+                          }catch(e){
+
+                          }
+                        }else{
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context){
+                              return AlertDialog(
+                                title: Text("読み込みエラー"),
+                                content: Text("何も入力されていません"),
+                              );
+                            },
+                          );
+                        }
                       });
-                    },
+                    }, //onTap
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        vertical: 16.0,
+                        vertical: 16,
                       ),
-                      color: Color(0xFFFF0000),
+                      color: Colors.green,
                       child: Text(
-                        "LOAD",
-                        style: TextStyle(fontSize: 18.0, color: Colors.white),
+                        "検索",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -197,42 +226,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                   SizedBox(
-                    height: 10.0,
-                  ),
-                  TextField(
-                    controller: _seekToController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Seek to seconds",
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: OutlineButton(
-                          child: Text("Seek"),
-                          onPressed: () => _controller.seekTo(
-                            Duration(
-                              seconds: int.parse(_seekToController.text),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
+                    height: 10,
                   ),
                   Row(
                     children: <Widget>[
                       Text(
-                        "Volume",
+                        "音量",
                         style: TextStyle(fontWeight: FontWeight.w300),
                       ),
                       Expanded(
                         child: Slider(
                           inactiveColor: Colors.transparent,
                           value: _volume,
-                          min: 0.0,
-                          max: 100.0,
+                          min: 0,
+                          max: 100,
                           divisions: 10,
                           label: '${(_volume).round()}',
                           onChanged: (value) {
@@ -245,16 +252,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "Status: $_playerStatus",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -262,17 +259,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-  }
+  } // <Widget>[]
 
-  void _showThankYouDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Video Ended"),
-          content: Text("Thank you for trying the plugin!"),
-        );
-      },
-    );
+  void listener(){
+    if(_controller.value.playerState == PlayerState.ended){
+      showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("再生終了"),
+            content: Text("次もよろしくね！"),
+          );
+        },
+      );
+    }
   }
 }
