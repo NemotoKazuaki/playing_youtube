@@ -154,30 +154,19 @@ class _MyHomePageState extends State<MyHomePage>{
                   //Wedgetにタッチインタフェースを使う時に使う
                   InkWell(
                     //タップしたら処理
-                    onTap: (){
-                      setState(() {
-                        if(!(_idController.text == "")){
-                          _videoId = _idController.text;
-                          try{
-                            //URLの場合は、対応するIDに変換する
-                            if(_videoId.contains("http")){
-                              _videoId = YoutubePlayer.convertUrlToId(_videoId);
-                            }
-                          }catch(e){
 
+                    onTap: (){
+                      if((_idController.text != "")){
+                        setState(() {
+                          _videoId = _idController.text;
+                          //URLの場合は、対応するIDに変換する
+                          if (_videoId.contains("http")) {
+                            _videoId = YoutubePlayer.convertUrlToId(_videoId);
                           }
-                        }else{
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context){
-                              return AlertDialog(
-                                title: Text("読み込みエラー"),
-                                content: Text("何も入力されていません"),
-                              );
-                            },
-                          );
-                        }
-                      });
+                        });
+                      }else{
+                        errMessage("読み込みエラー", "入力されていません");
+                      }
                     }, //onTap
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -221,7 +210,9 @@ class _MyHomePageState extends State<MyHomePage>{
                       ),
                       IconButton(
                         icon: Icon(Icons.fullscreen),
-                        onPressed: () => _controller.enterFullScreen(),
+                        onPressed: () {
+                          _controller.enterFullScreen();
+                        },
                       ),
                     ],
                   ),
@@ -260,6 +251,18 @@ class _MyHomePageState extends State<MyHomePage>{
       ),
     );
   } // <Widget>[]
+
+  void errMessage(titleMessage,textMessage){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text(titleMessage.toString()),
+          content: Text(textMessage.toString()),
+        );
+      },
+    );
+  }
 
   void listener(){
     if(_controller.value.playerState == PlayerState.ended){
