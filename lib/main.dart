@@ -156,16 +156,14 @@ class _MyHomePageState extends State<MyHomePage>{
                     //タップしたら処理
 
                     onTap: (){
-                      if((_idController.text != "")){
+                      if((inputCheck(_idController.text))){
                         setState(() {
                           _videoId = _idController.text;
                           //URLの場合は、対応するIDに変換する
                           if (_videoId.contains("http")) {
-                            _videoId = YoutubePlayer.convertUrlToId(_videoId);
+                            _videoId = convertURL(_videoId);
                           }
                         });
-                      }else{
-                        errMessage("読み込みエラー", "入力されていません");
                       }
                     }, //onTap
                     child: Container(
@@ -175,7 +173,10 @@ class _MyHomePageState extends State<MyHomePage>{
                       color: Colors.green,
                       child: Text(
                         "検索",
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -188,21 +189,23 @@ class _MyHomePageState extends State<MyHomePage>{
                     children: <Widget>[
                       IconButton(
                         icon: Icon(
-                          _controller.value.isPlaying
-                              ? Icons.play_arrow
-                              : Icons.pause,
+                          _controller.value.isPlaying ?
+                            Icons.play_arrow : Icons.pause,
                         ),
                         onPressed: () {
-                          _controller.value.isPlaying
-                              ? _controller.pause()
-                              : _controller.play();
+                          _controller.value.isPlaying ?
+                            _controller.pause() : _controller.play();
                           setState(() {});
                         },
                       ),
                       IconButton(
-                        icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
+                        icon: Icon(
+                              _muted ?
+                                Icons.volume_off : Icons.volume_up
+                              ),
                         onPressed: () {
-                          _muted ? _controller.unMute() : _controller.mute();
+                          _muted ?
+                            _controller.unMute() : _controller.mute();
                           setState(() {
                             _muted = !_muted;
                           });
@@ -252,16 +255,35 @@ class _MyHomePageState extends State<MyHomePage>{
     );
   } // <Widget>[]
 
-  void errMessage(titleMessage,textMessage){
+  void errMessage(String titleMessage,String textMessage){
     showDialog(
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          title: Text(titleMessage.toString()),
-          content: Text(textMessage.toString()),
+          title: Text(titleMessage),
+          content: Text(textMessage),
         );
       },
     );
+  }
+  
+  String convertURL(String text){
+    return text = YoutubePlayer.convertUrlToId(text);
+  }
+
+  bool inputCheck(String text){
+    bool flg = true ;
+    int len = text.length ?? 0 ;
+    text = convertURL(text);
+
+    if(len == 0){
+      errMessage("読み込みエラー", "何も入力されていません");
+      flg = false;
+    }else if(len != 11){
+      errMessage("入力エラー", "入力が無効です");
+      flg = false;
+    }
+    return flg;
   }
 
   void listener(){
